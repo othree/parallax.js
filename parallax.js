@@ -113,6 +113,13 @@
       return this;
     }
 
+    if (navigator.userAgent.match(/(Safari)/)) {
+      this.simple = true;
+      this.$element.css({
+        backgroundImage: 'url(' + this.imageSrc + ')',
+      });
+    }
+
     this.$mirror = $('<div />').prependTo('body');
     this.$slider = $('<img />').prependTo(this.$mirror);
 
@@ -212,6 +219,16 @@
       var scrollLeft   = Parallax.scrollLeft;
       var overScroll   = this.overScrollFix ? Parallax.overScroll : 0;
       var scrollBottom = scrollTop + Parallax.winHeight;
+
+      if (this.simple) {
+        this.mirrorTop = this.boxOffsetTop  - scrollTop;
+        this.offsetTop = this.offsetBaseTop - this.mirrorTop * (1 - this.speed);
+        this.$element.css({
+          backgroundSize: this.imageWidth + 'px ' + this.imageHeight + 'px',
+          backgroundPosition: '0 ' + this.offsetTop + 'px'
+        });
+        return;
+      }
 
       if (this.boxOffsetBottom > scrollTop && this.boxOffsetTop < scrollBottom) {
         this.visibility = 'visible';
